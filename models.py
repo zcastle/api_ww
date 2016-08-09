@@ -15,7 +15,7 @@ class Familia(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	descripcion = db.Column(db.String(255), unique=True)
 	#producto = db.relationship('Producto', backref='familia', lazy='dynamic')
-	#orden = db.Column(db.Integer)
+	orden = db.Column(db.Integer)
 	orden2 = db.Column(db.Integer)
 
 	def __repr__(self):
@@ -59,6 +59,7 @@ class Distrito(db.Model):
 
 class Contacto(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+	ruc = db.Column(db.String(11), unique=True)
 	descripcion = db.Column(db.String(255), unique=True)
 	coordinador = db.Column(db.String(255), unique=True)
 	direccion = db.Column(db.String(255))
@@ -119,14 +120,34 @@ class Guia(db.Model):
 
 	cia_id = db.Column(db.Integer, db.ForeignKey("cia.id"))
 
+	cerrado = db.Column(db.Integer)
+	vgui_est = db.Column(db.String(11))
+
 	def __repr__(self):
 		return '<Guia %r-%r>' % (self.cgui_ser, self.cgui_num)
 
 	def getNumero(self):
-		return '%s-%s' % (self.cgui_ser, self.cgui_num)
+		if self.cerrado==0:
+			return "EN PROCESO"
+		else:
+			return '%s-%s' % (self.cgui_ser, self.cgui_num)
 
 	def getFecha(self):
 		return self.dgui_fee.strftime('%d-%m-%Y')
+
+	def isAnulado(self):
+		return "N" if self.vgui_est=="GENERADO" else "S"
+
+class GuiaSalidaDetalle(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	guia_id = db.Column(db.Integer, db.ForeignKey("guia.igui_id"))
+	guia = db.relationship("Guia", backref=db.backref('guia_salida_detalle', lazy='dynamic'))
+	producto_id = db.Column(db.Integer, db.ForeignKey("producto.id"))
+	producto = db.relationship("Producto", backref=db.backref('guia_salida_detalle', lazy='dynamic'))
+	cantidad = db.Column(db.Integer)
+
+	def __repr__(self):
+		return '<GuiaSalidaDetalle %r>' % (self.id)
 
 class Compra(db.Model):
 	icom_id = db.Column(db.Integer, primary_key=True)

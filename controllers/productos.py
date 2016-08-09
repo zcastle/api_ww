@@ -16,7 +16,7 @@ class ProductosAll(MyResource):
 
 			if len(productos)==0:
 				self.response["error"] = True
-				self.response["message"] = "No se ha encontrado producto con el numero de serie."
+				self.response["message"] = "No se ha encontrado informacion."
 
 			for row in productos:
 				data = {
@@ -42,7 +42,7 @@ class Productos(MyResource):
 
 			if row is None:
 				self.response["error"] = True
-				self.response["message"] = "No se ha encontrado producto con el numero de serie."
+				self.response["message"] = "No se ha encontrado informacion."
 
 			print(row.serie)
 

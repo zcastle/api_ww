@@ -1,8 +1,8 @@
 from init import app, api, auth
 from flask import g, jsonify, make_response
 from controllers.productos import ProductosAll, Productos
-from controllers.contactos import ContactosAll, Contactos
-from controllers.guias import GuiasAll
+from controllers.contactos import ContactosAll, Contactos, ContactosFacturasPendientes
+from controllers.guias import GuiasAll, GuiasDetalle, GuiasDetalleResumen, GuiasTipo
 from models import Usuario
 
 @app.errorhandler(404)
@@ -51,12 +51,20 @@ api.add_resource(ContactosAll,
 	'/api/contacto/listar',
 	'/api/contacto/listar/<string:nombre>')
 api.add_resource(Contactos, 
-	'/api/contacto'
+	'/api/contacto',
 	'/api/contacto/<int:id>')
+api.add_resource(ContactosFacturasPendientes, 
+	'/api/contacto/facturas/pendientes/<int:id>')
 
 api.add_resource(GuiasAll, 
 	'/api/guia/listar/<int:ciaId>',
-	'/api/guia/listar/<int:ciaId>/<int:contactoId>/<string:numero>')
+	'/api/guia/listar/<int:ciaId>/<int:contactoId>/<string:numero>/<int:pagina>')
+
+api.add_resource(GuiasTipo, '/api/guia/tipo/listar')
+
+api.add_resource(GuiasDetalle, '/api/guia/detalle/<int:id>')
+
+api.add_resource(GuiasDetalleResumen, '/api/guia/detalle/resumen/<int:id>')
 
 #if __name__ == "__main__":
 #	app.run(debug=True)
