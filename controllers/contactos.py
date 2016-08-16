@@ -77,7 +77,7 @@ class ContactosFacturasPendientes(MyResource):
 	@auth.login_required
 	def get(self, id=0):
 
-		sql = 'SELECT V.iven_id, V.dven_fee, CONCAT(V.cven_ser, \'-\', V.cven_num) AS numero, V.orden, V.nven_tot, M.vmon_sim FROM venta V INNER JOIN moneda M ON M.imon_id = V.imon_id WHERE V.icli_id = '+str(id)+' AND V.vven_est = \'GENERADO\' AND V.temporal = \'N\' AND V.iven_id NOT IN (SELECT CD.venta_id FROM cobranza_d CD INNER JOIN cobranza C ON C.id=CD.cobranza_id) ORDER BY V.dven_fee, V.cven_num'
+		sql = 'SELECT V.iven_id, V.dven_fee, CONCAT(V.cven_ser, \'-\', V.cven_num) AS numero, IFNULL(V.orden, \'\') AS orden, ROUND(V.nven_tot, 2) AS nven_tot, M.vmon_sim FROM venta V INNER JOIN moneda M ON M.imon_id = V.imon_id WHERE V.icli_id = '+str(id)+' AND V.vven_est = \'GENERADO\' AND V.temporal = \'N\' AND V.iven_id NOT IN (SELECT CD.venta_id FROM cobranza_d CD INNER JOIN cobranza C ON C.id=CD.cobranza_id) ORDER BY V.dven_fee, V.cven_num'
 		rows = db.engine.execute(sql)
 		for row in rows:
 			self.response["data"].append({
